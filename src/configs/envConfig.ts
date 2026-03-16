@@ -15,7 +15,12 @@ export const JWT_SECRET = process.env.JWT_SECRET ?? ''
 export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID ?? ''
 export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET ?? ''
 export const GOOGLE_REDIRECT_URL = process.env.GOOGLE_REDIRECT_URL ?? ''
-export const CLIENT_URL = process.env.CLIENT_URL ?? ''
+export const CLIENT_URL = (process.env.CLIENT_URL ?? '').replace(/\/$/, '')
+/** Comma-separated list of extra origins for CORS (e.g. Vercel preview URLs). No trailing slashes. */
+export const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS ?? '')
+  .split(',')
+  .map((o) => o.trim().replace(/\/$/, ''))
+  .filter(Boolean)
 export const IMG_HOST = process.env.IMG_HOST ?? ''
 export const SMTP_MAIL = process.env.SMTP_MAIL ?? ''
 export const SMTP_PASSWORD = process.env.SMTP_PASSWORD ?? ''

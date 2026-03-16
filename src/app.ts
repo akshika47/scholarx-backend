@@ -6,7 +6,7 @@ import express from 'express'
 import fs from 'fs'
 import passport from 'passport'
 import { dataSource } from './configs/dbConfig'
-import { CLIENT_URL } from './configs/envConfig'
+import { ALLOWED_ORIGINS, CLIENT_URL } from './configs/envConfig'
 import './configs/google-passport'
 import './configs/linkedin-passport'
 import adminRouter from './routes/admin/admin.route'
@@ -27,10 +27,11 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(express.static(staticFolder))
 app.use(passport.initialize())
+const corsOrigins = [CLIENT_URL, ...ALLOWED_ORIGINS].filter(Boolean)
 app.use(
   cors({
-    origin: CLIENT_URL,
-    methods: 'GET, HEAD, PUT, PATCH, DELETE',
+    origin: corsOrigins.length ? corsOrigins : false,
+    methods: 'GET, HEAD, PUT, PATCH, POST, DELETE',
     credentials: true
   })
 )
