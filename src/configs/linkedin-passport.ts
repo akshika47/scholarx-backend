@@ -14,15 +14,16 @@ import { Strategy as LinkedInStrategy } from 'passport-linkedin-oauth2'
 import { findOrCreateUser } from '../services/auth.service'
 import { type CreateProfile, type LinkedInProfile, type User } from '../types'
 
-passport.use(
-  new LinkedInStrategy(
-    {
-      clientID: LINKEDIN_CLIENT_ID,
-      clientSecret: LINKEDIN_CLIENT_SECRET,
-      callbackURL: LINKEDIN_REDIRECT_URL,
-      scope: ['openid', 'email', 'profile'],
-      passReqToCallback: true
-    },
+if (LINKEDIN_CLIENT_ID && LINKEDIN_CLIENT_SECRET && LINKEDIN_REDIRECT_URL) {
+  passport.use(
+    new LinkedInStrategy(
+      {
+        clientID: LINKEDIN_CLIENT_ID,
+        clientSecret: LINKEDIN_CLIENT_SECRET,
+        callbackURL: LINKEDIN_REDIRECT_URL,
+        scope: ['openid', 'email', 'profile'],
+        passReqToCallback: true
+      },
     async function (
       req: Request,
       accessToken: string,
@@ -46,7 +47,8 @@ passport.use(
       }
     }
   )
-)
+  )
+}
 
 passport.serializeUser((user: Express.User, done) => {
   done(null, (user as User).primary_email)

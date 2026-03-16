@@ -1,0 +1,9 @@
+# Render: use Start Command "node dist/src/server.js" in the dashboard
+# Required env vars: DATABASE_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, JWT_SECRET, CLIENT_URL, IMG_HOST
+
+services:
+  - type: web
+    name: scholarx-backend
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: node dist/src/server.js

@@ -14,15 +14,16 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20'
 import { findOrCreateUser } from '../services/auth.service'
 import { type CreateProfile, type User } from '../types'
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: GOOGLE_REDIRECT_URL,
-      scope: ['profile', 'email'],
-      passReqToCallback: true
-    },
+if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET && GOOGLE_REDIRECT_URL) {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: GOOGLE_CLIENT_ID,
+        clientSecret: GOOGLE_CLIENT_SECRET,
+        callbackURL: GOOGLE_REDIRECT_URL,
+        scope: ['profile', 'email'],
+        passReqToCallback: true
+      },
     async function (
       req: Request,
       accessToken: string,
@@ -45,7 +46,8 @@ passport.use(
       }
     }
   )
-)
+  )
+}
 
 passport.serializeUser((user: Express.User, done) => {
   done(null, (user as User).primary_email)
