@@ -302,6 +302,6 @@ export const getAllMentors = async ({
     }
   } catch (err) {
     console.error('Error getting mentors', err)
-    throw new Error('Error getting mentors')
+    throw err
   }
 }

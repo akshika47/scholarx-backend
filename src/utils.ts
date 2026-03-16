@@ -25,6 +25,10 @@ export const signAndSetCookie = (res: Response, uuid: string): void => {
 export const getMentorPublicData = (mentor: Mentor): Mentor => {
   const { application, profile } = mentor
 
+  if (!application || !profile) {
+    return mentor
+  }
+
   delete application.cv
   delete application.contactNo
   delete application.email
@@ -35,7 +39,7 @@ export const getMentorPublicData = (mentor: Mentor): Mentor => {
   delete profile.updated_at
 
   let appliedMenteesCount = 0
-  let availableMenteeSlots = mentor.application.noOfMentees as number
+  let availableMenteeSlots = (application.noOfMentees as number) ?? 0
 
   if (mentor.mentees) {
     appliedMenteesCount = mentor.mentees.length
@@ -50,22 +54,25 @@ export const getMentorPublicData = (mentor: Mentor): Mentor => {
 
     availableMenteeSlots -= approvedMenteesCount
   }
-  mentor.application.appliedMenteesCount = appliedMenteesCount
-  mentor.application.availableMenteeSlots = availableMenteeSlots
+  application.appliedMenteesCount = appliedMenteesCount
+  application.availableMenteeSlots = Math.max(0, availableMenteeSlots)
   return mentor
 }
 
 export const getMenteePublicData = (mentee: Mentee): Mentee => {
   const { application, profile } = mentee
 
-  delete application.cv
-  delete application.contactNo
-  delete application.email
-  delete application.submission
-  delete application.consentGiven
-
-  delete profile.created_at
-  delete profile.updated_at
+  if (application) {
+    delete application.cv
+    delete application.contactNo
+    delete application.email
+    delete application.submission
+    delete application.consentGiven
+  }
+  if (profile) {
+    delete profile.created_at
+    delete profile.updated_at
+  }
 
   if (mentee.mentor) {
     mentee.mentor = getMentorPublicData(mentee.mentor)
